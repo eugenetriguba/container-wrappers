@@ -1,0 +1,38 @@
+FROM python:3.10.4-slim-bullseye
+
+ENV BUILD_DEPS="\
+gcc \
+python3-dev \
+libffi-dev \
+cargo"
+
+ENV APP_USER="appuser"
+
+RUN adduser \
+        --home /home/$APP_USER \
+        --gecos "App User" \
+        --shell /bin/sh \
+        --disabled-password $APP_USER \
+    && apt-get update --assume-yes --quiet \
+    && apt-get install \
+        --assume-yes \
+        --quiet \
+        --no-install-recommends \
+        $BUILD_DEPS
+
+USER $APP_USER
+WORKDIR /home/$APP_USER
+ENV PATH="$PATH:/home/$APP_USER/.local/bin"
+
+RUN pip install --no-cache-dir "pip==22.1.1" \
+    && pip install --no-cache-dir "poetry==1.1.13" \
+    && echo "source $HOME/.local/bin" >> $HOME/.profile \
+    && poetry config virtualenvs.create false
+
+USER root
+RUN rm -rf /var/lib/apt/lists/* \
+    && apt-get purge -y --auto-remove $BUILD_DEPS
+
+USER $APP_USER
+CMD ["/bin/sh"]
+
