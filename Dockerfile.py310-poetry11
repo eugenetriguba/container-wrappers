@@ -27,7 +27,7 @@ WORKDIR /home/$APP_USER
 ENV PATH="$PATH:/home/$APP_USER/.local/bin"
 
 RUN pip install --user --no-cache-dir "pip==22.1.1" \
-    && pip install --user --no-cache-dir "poetry==1.1.14" \
+    && pip install --user --no-cache-dir "poetry==1.2.0b3" \
     && echo "source $HOME/.local/bin" >> $HOME/.profile \
     && poetry config virtualenvs.create false
 
