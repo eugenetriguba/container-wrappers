@@ -8,32 +8,16 @@ python3-dev \
 libffi-dev \
 cargo"
 
-ENV APP_USER="appuser"
-
-RUN adduser \
-        --home /home/$APP_USER \
-        --gecos "App User" \
-        --shell /bin/sh \
-        --disabled-password $APP_USER \
-    && apt-get update --assume-yes --quiet \
+RUN apt-get update --assume-yes --quiet \
     && apt-get install \
         --assume-yes \
         --quiet \
         --no-install-recommends \
         $BUILD_DEPS
 
-USER $APP_USER
-WORKDIR /home/$APP_USER
-ENV PATH="$PATH:/home/$APP_USER/.local/bin"
+RUN pip install --no-cache-dir "pip==22.1.2" \
+    && pip install --no-cache-dir "poetry==1.2.0b3" \
+    && poetry config virtualenvs.create false \
+    && apt-get purge -y --auto-remove $BUILD_DEPS
 
-RUN pip install --user --no-cache-dir "pip==22.1.1" \
-    && pip install --user --no-cache-dir "poetry==1.2.0b3" \
-    && echo "source $HOME/.local/bin" >> $HOME/.profile \
-    && poetry config virtualenvs.create false
-
-USER root
-RUN apt-get purge -y --auto-remove $BUILD_DEPS
-
-USER $APP_USER
 CMD ["/bin/sh"]
-
