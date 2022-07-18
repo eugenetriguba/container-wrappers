@@ -1,5 +1,3 @@
-# Build with:
-#   docker build -f Dockerfile.py310-poetry11 -t eugenetriguba/python:3.10-poetry1.1 .
 FROM python:3.10.4-slim-bullseye
 
 ENV BUILD_DEPS="\
