@@ -24,9 +24,9 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
-          file: Dockerfile.py310-poetry11
+          file: Dockerfile.py310-poetry12
           platforms: linux/amd64
           push: true
-          tags: eugenetriguba/python:3.10-poetry1.1
+          tags: eugenetriguba/python:3.10-poetry1.2
           cache-from: type=gha
           cache-to: type=gha,mode=max
