@@ -6,32 +6,27 @@
 FROM python:3.10.4-slim-bullseye
 
 ENV BUILD_DEPS="\
-gcc \
-python3-dev \
-libffi-dev \
-cargo"
+    gcc=4:10.2.1-1 \
+    python3-dev=3.9.2-3 \
+    libffi-dev=3.3-6 \
+    cargo=0.47.0-3+b1"
+
 ENV APP_USER="appuser"
-ENV PATH="/home/$APP_USER/.local/bin:$PATH"
 
 RUN adduser \
         --home /home/$APP_USER \
         --gecos "App User" \
         --shell /bin/sh \
-        --disabled-password $APP_USER \
-    && apt-get update --assume-yes --quiet \
-    && apt-get install \
-        --assume-yes \
-        --quiet \
-        --no-install-recommends \
-        $BUILD_DEPS \
-    && su $APP_USER -c 'pip install --no-cache-dir "pip==22.2.2"' \
-    && su $APP_USER -c 'pip install --no-cache-dir "poetry==1.2.0b3"' \
-    && su $APP_USER -c 'echo "source /home/$APP_USER/.local/bin" >> /home/$APP_USER/.profile' \
-    && su $APP_USER -c 'poetry config virtualenvs.create false' \
+        --disabled-password \
+        $APP_USER \
+    && apt-get update --assume-yes \
+    && apt-get install --assume-yes --no-install-recommends $BUILD_DEPS \
+    && su $APP_USER -c "pip install --no-cache-dir --user 'pip==22.2.2' 'poetry==1.2.0'" \
     && rm -rf /var/lib/apt/lists/* \
-    && apt-get purge -y --auto-remove $BUILD_DEPS
+    && apt-get purge --assume-yes --auto-remove $BUILD_DEPS
 
 USER $APP_USER
 WORKDIR /home/$APP_USER
+ENV PATH="/home/$APP_USER/.local/bin:$PATH"
 
-CMD ["/bin/sh"]
+ENTRYPOINT ["/bin/sh", "-c"]
