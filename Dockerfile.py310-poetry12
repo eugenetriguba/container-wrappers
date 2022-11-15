@@ -3,7 +3,7 @@
 #
 # Deploy with:
 #   docker push eugenetriguba/python:3.10-poetry1.2
-FROM python:3.10.4-slim-bullseye
+FROM python:3.10.8-slim-bullseye
 
 ENV BUILD_DEPS="\
     gcc=4:10.2.1-1 \
@@ -21,7 +21,7 @@ RUN adduser \
         $APP_USER \
     && apt-get update --assume-yes \
     && apt-get install --assume-yes --no-install-recommends $BUILD_DEPS \
-    && su $APP_USER -c "pip install --no-cache-dir --user 'pip==22.2.2' 'poetry==1.2.0'" \
+    && su $APP_USER -c "pip install --no-cache-dir --user 'pip==22.3.1' 'poetry==1.2.2'" \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get purge --assume-yes --auto-remove $BUILD_DEPS
 

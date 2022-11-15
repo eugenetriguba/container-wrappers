@@ -1,0 +1,13 @@
+name: ci
+
+on: [push]
+
+jobs:
+  lint-images:
+    runs-on: ubuntu-latest
+    container:
+      image: hadolint/hadolint:v2.9.3-debian
+    steps:
+      - uses: actions/checkout@v3
+      - name: Lint
+        run: hadolint *Dockerfile*
