@@ -1,17 +1,25 @@
-name: Rebuild py311-poetry12
+name: ci
 
-# https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_run
-# This will only run on the default branch, which is 'main' and desirable in this case.
-on:
-  workflow_run:
-    workflows: ["lint"]
-    types:
-      - completed
+on: [push]
 
 jobs:
+  lint-images:
+    runs-on: ubuntu-latest
+    container:
+      image: hadolint/hadolint:v2.9.3-debian
+    steps:
+      - uses: actions/checkout@v3
+      - name: Lint
+        run: hadolint *Dockerfile*
   rebuild-image:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: github.ref == 'refs/heads/main'
+    strategy:
+      matrix:
+        images: [
+          {file: Dockerfile.py310-poetry12, tag: eugenetriguba/python:3.10-poetry1.2},
+          {file: Dockerfile.py311-poetry12, tag: eugenetriguba/python:3.11-poetry1.2}
+        ]
     steps:
       - name: Check out the repo
         uses: actions/checkout@v3
@@ -28,9 +36,9 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
-          file: Dockerfile.py311-poetry12
+          file: ${{ matrix.images.file }}
           platforms: linux/amd64
           push: true
-          tags: eugenetriguba/python:3.11-poetry1.2
+          tags: ${{ matrix.images.tag }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
