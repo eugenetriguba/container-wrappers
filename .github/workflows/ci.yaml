@@ -16,9 +16,7 @@ jobs:
     if: github.ref == 'refs/heads/main'
     strategy:
       matrix:
-        images:
-          - {file: Dockerfile.py310-poetry12, tag: eugenetriguba/python:3.10-poetry1.2}
-          - {file: Dockerfile.py311-poetry12, tag: eugenetriguba/python:3.11-poetry1.2}
+        images: [{file: Dockerfile.py310-poetry12, tag: eugenetriguba/python:3.10-poetry1.2}, {file: Dockerfile.py311-poetry12, tag: eugenetriguba/python:3.11-poetry1.2}]
     steps:
       - name: Check out the repo
         uses: actions/checkout@v3
