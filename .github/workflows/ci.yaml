@@ -6,9 +6,9 @@ jobs:
   lint-images:
     runs-on: ubuntu-latest
     container:
-      image: hadolint/hadolint:v2.9.3-debian
+      image: hadolint/hadolint:v2.12.0-debian
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Lint
         run: hadolint *Dockerfile*
   rebuild-image:
