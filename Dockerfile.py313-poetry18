@@ -21,7 +21,7 @@ RUN adduser \
     $APP_USER \
     && apt-get update --assume-yes \
     && apt-get install --assume-yes --no-install-recommends $BUILD_DEPS \
-    && pip install --no-cache-dir 'pip==24.2' 'poetry==1.8.5'
+    && pip install --no-cache-dir 'pip==24.2' 'poetry==1.8.5' \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get purge --assume-yes --auto-remove $BUILD_DEPS
 
